@@ -17,10 +17,8 @@ COMMIT_MESSAGE = 'Prueba desde python'
 
 def git_push():
     try:
-        
         repo = Repo(PATH_OF_GIT_REPO)
         repo.git.add(update=True)
-        print("1")
         repo.index.commit(COMMIT_MESSAGE)
         origin = repo.remote(name='origin')
         origin.push()
