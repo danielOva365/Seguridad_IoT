@@ -2,7 +2,6 @@
 import requests
 import json
 
-
 #Librerias proyecto
 import RPi.GPIO as GPIO
 import time
@@ -11,19 +10,27 @@ from time import sleep
 
 #Librerias para git
 from git import Repo
+import subprocess
+from pexpect import popen_spawn
+import os
+#import git
 
-PATH_OF_GIT_REPO = '/home/pi/Desktop/Seguridad_git/Seguridad_IoT'  # make sure .git folder is properly configured
-COMMIT_MESSAGE = 'Prueba desde python'
-
-def git_push():
-    try:
-        repo = Repo(PATH_OF_GIT_REPO)
-        repo.git.add(update=True)
-        repo.index.commit(COMMIT_MESSAGE)
-        origin = repo.remote(name='origin')
-        origin.push()
-    except:
-        print('Some error occured while pushing the code')    
+def set_credentials():
+    user = "danielOva365"
+    password = "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"
+    remote = f"https://{user}:{password}@github.com/danielOva365/Seguridad_IoT.git"
+    Repo.clone_from(remote,"/home/pi/Desktop/seguridad_iot")
+    
+def push2():
+    #cmd = "git remote set-url origin https://github.com/danielOva365/Seguridad_IoT.git"
+    #subprocess.call(cmd, shell=True)
+    #remote = f"https://{user}:{password}@github.com/danielOva365/Seguridad_IoT.git"
+    #Repo.clone_from(remote,"/home/pi/Desktop/prueba")
+    repo = Repo(".")
+    repo.git.add(".")
+    repo.index.commit("Actualización_3.0")
+    origin = repo.remote(name="origin")
+    origin.push()
 
 
 def main():
@@ -56,23 +63,23 @@ def main():
     datos = json.loads(respuesta.text)
     print(datos)
 
-    '''
+    
     #Imprimir el primer dato de temperatura, de los cinco que se solicitaron
     pirleido = datos["feeds"][0]["field1"]
     print(pirleido)
     #Imprimir el tercer dato de humedad, de los cinco que se solicitaron
     presionleida = datos["feeds"][2]["field2"]
-    print(presionleida)'''
+    print(presionleida)
 
     #Imprimir los cinco datos de temperatura
-    '''print("Los 2 datos de presion")
+    print("Los 2 datos de presion")
     for i in range(5):
         tempLeida = datos["feeds"][i]["field1"]
-        print(tempLeida) '''
+        print(tempLeida) 
 
     #Petición para leer los cinco últimos datos del campo 1 (field1 = temperatura)
-    '''respuesta = requests.get("https://api.thingspeak.com/channels/115470/fields/1.json?api_key=383NBO2ANDYSI6HN&results=5")
+    respuesta = requests.get("https://api.thingspeak.com/channels/115470/fields/1.json?api_key=383NBO2ANDYSI6HN&results=5")
     print(respuesta.text)
-    '''
+    
 
-git_push()
+push2()
